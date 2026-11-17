@@ -1,13 +1,15 @@
-# 🔴 Nível 3: Clean Design
+# 🔴 Nível 3: Clean Design pelo ciclo RGR
 
-Implemente uma `CalculadoraVoucher` do zero utilizando o ciclo TDD (Red-Green-Refactor).
+Este exercício parte da função legada `calcularDesconto`, que inicialmente retornava sempre zero. A refatoração é guiada pelos testes de comportamento:
 
-### Regras de Negócio:
-- Cupom **'DEZ'**: 10% de desconto.
-- Cupom **'TRINTA'**: 30% de desconto.
-- Outros: Sem desconto.
+1. **Red:** testes de aceitação para `DEZ` (10%), `TRINTA` (30%) e cupom desconhecido (0%) descrevem as regras e falham contra o retorno legado.
+2. **Green:** implementação mínima calcula os percentuais esperados e rejeita valores inválidos.
+3. **Refactor:** percentuais ficam numa tabela de consulta, a entrada do cupom é normalizada, o cálculo é arredondado a centavos e a função fica coberta também pela classe `CalculadoraVoucher`.
 
-### Como rodar:
+O teste antigo de exemplo com `NATAL10` não correspondia às regras do desafio; ele agora verifica que cupons não reconhecidos não dão desconto.
+
+### Como rodar
+
 ```bash
 npm install && npm test
 ```

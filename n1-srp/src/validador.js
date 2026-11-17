@@ -1,6 +1,25 @@
+export class EmailValidator {
+  isValid(email) {
+    return typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+}
+
+export class PasswordValidator {
+  isValid(password) {
+    return typeof password === 'string' && password.length >= 8;
+  }
+}
+
+export class AgeValidator {
+  isValid(age) {
+    return typeof age === 'number' && Number.isFinite(age) && age >= 18;
+  }
+}
+
 export function validadorUsuario(usuario) {
-  if (!usuario.email.includes('@')) return false;
-  if (usuario.password.length < 8) return false;
-  if (usuario.age < 18) return false;
-  return true;
+  if (!usuario || typeof usuario !== 'object') return false;
+
+  return new EmailValidator().isValid(usuario.email)
+    && new PasswordValidator().isValid(usuario.password)
+    && new AgeValidator().isValid(usuario.age);
 }

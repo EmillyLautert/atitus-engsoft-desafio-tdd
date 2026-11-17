@@ -1,23 +1,11 @@
-# 🟡 Nível 2: DIP (Mocks)
+# 🟡 Nível 2: DIP com mocks e stubs
 
-O `ServicoNotificacao` depende de um gateway de e-mail. Aplique injeção de dependência para testá-lo isoladamente.
+`ServicoNotificacao` depende do contrato `gatewayEmail.enviar` e recebe a implementação pelo construtor. Assim, a regra de boas-vindas não cria nem acopla a infraestrutura de e-mail.
 
-### Tarefas:
-- [ ] Injetar `GatewayEmail` no construtor do serviço.
-- [ ] Usar `jest.fn()` para criar um Mock do gateway no teste.
-- [ ] Validar se o gateway é chamado com os dados corretos.
+Os testes usam um **mock** (`jest.fn`) para verificar a interação e um **stub** para fornecer respostas controladas sem rede ou envio real. Também cobrem propagação de falha e validação da dependência.
 
-### Como rodar:
+### Como rodar
+
 ```bash
 npm install && npm test
 ```
-
-> 🪟 **Aviso para usuários de Windows:**
-> Para rodar os scripts definidos no `package.json` que injetam variáveis de ambiente (como `NODE_NO_WARNINGS=1`), é necessário instalar a biblioteca `cross-env`.
-> 
-> Caso ocorram erros na execução, instale a dependência usando:
-> ```bash
-> npm install -D cross-env
-> ```
-> Depois, basta alterar o comando `"test"` no seu `package.json` inserindo `cross-env` no início:
-> `"test": "cross-env NODE_NO_WARNINGS=1 node ..."`

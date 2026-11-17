@@ -2,13 +2,31 @@ import { ServicoNotificacao } from '../src/servicoNotificacao.js';
 import { jest } from '@jest/globals';
 
 describe('ServicoNotificacao', () => {
-  test('deve chamar o gateway de email com os dados corretos', async () => {
-    // TODO: Implementar teste usando Mocks e Injeção de Dependência
-    // 1. Crie um mock do gateway de email usando jest.fn()
-    // 2. Refatore a classe ServicoNotificacao para aceitar o gateway pelo construtor (DIP)
-    // 3. Injete o mock instanciando o serviço: new ServicoNotificacao(mockGateway)
-    // 4. Chame o método enviarBoasVindas
-    // 5. Verifique se mockGateway.enviar foi chamado com os parâmetros corretos
+  test('mock verifica que o gateway recebe os dados corretos', async () => {
+    const gatewayEmail = { enviar: jest.fn().mockResolvedValue(true) };
+    const service = new ServicoNotificacao(gatewayEmail);
+
+    await expect(service.enviarBoasVindas({ email: 'ana@example.com' })).resolves.toBe(true);
+    expect(gatewayEmail.enviar).toHaveBeenCalledTimes(1);
+    expect(gatewayEmail.enviar).toHaveBeenCalledWith('ana@example.com', 'Bem-vindo!');
+  });
+
+  test('stub fornece uma resposta controlada sem enviar email real', async () => {
+    const gatewayStub = { enviar: async () => 'queued-by-stub' };
+    const service = new ServicoNotificacao(gatewayStub);
+
+    await expect(service.enviarBoasVindas({ email: 'ana@example.com' })).resolves.toBe('queued-by-stub');
+  });
+
+  test('propaga falhas do gateway', async () => {
+    const error = new Error('Falha no envio');
+    const gatewayStub = { enviar: async () => { throw error; } };
+    const service = new ServicoNotificacao(gatewayStub);
+
+    await expect(service.enviarBoasVindas({ email: 'ana@example.com' })).rejects.toBe(error);
+  });
+
+  test('rejeita uma dependência sem contrato de envio', () => {
+    expect(() => new ServicoNotificacao({})).toThrow(TypeError);
   });
 });
-
